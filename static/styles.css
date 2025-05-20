@@ -1,0 +1,150 @@
+/* Background Image Styles */
+body {
+    background-image: url('https://res.cloudinary.com/dajpwmuxc/image/upload/v1747486443/scroll_xoplvh.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    margin: 0;
+    font-family: 'Figtree', sans-serif;
+}
+
+/* Carousel Item Styles */
+.carousel-item {
+    position: relative;
+    height: 100vh;
+}
+
+/* Adjust carousel-caption to be centered vertically within the carousel-item */
+.carousel-caption {
+    position: absolute;
+    bottom: 50%;
+    left: 50%;
+    transform: translate(-50%, 50%);
+    color: white;
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+    z-index: 10;
+    width: 80%;
+    box-sizing: border-box;
+}
+
+/* Ensure carousel controls are visible and positioned correctly */
+.carousel-control-prev,
+.carousel-control-next {
+    z-index: 15;
+    width: 5%;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+}
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+    opacity: 1;
+}
+
+.carousel-control-prev {
+    left: 0;
+}
+
+.carousel-control-next {
+    right: 0;
+}
+
+/* Transparent Column Styles */
+.text-center,
+.d-flex {
+    padding: 2rem;
+    border-radius: 16px;
+    margin-top: 2rem;
+    min-height: 200px;
+}
+
+/* Card Styles */
+.card-container {
+    width: 100%;
+}
+
+.card {
+    background-color: #b38ff9;
+    border-radius: 16px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border: none;
+}
+
+/* Logo Styles */
+.card-logo {
+    width: 100px;
+    height: auto;
+    margin-bottom: 1rem;
+}
+
+/* Form Styles */
+.card-body {
+    padding: 2rem;
+}
+
+/* Form Controls */
+form {
+    padding: 1rem;
+    border-radius: 16px;
+}
+
+/* Input Areas */
+.form-control {
+    background-color: #000000;
+    color: #ffffff;
+    border: 1px solid #000000;
+}
+
+/* Form Labels and Buttons */
+.form-label,
+.btn {
+    color: #FFD700;
+}
+
+/* Nav Tabs */
+.nav-tabs .nav-link {
+    color: #ffffff;
+}
+
+.nav-tabs .nav-link.active {
+    color: #FFD700;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-color: #dee2e6 #dee2e6 #b38ff9;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    body {
+        padding-top: 80px;
+    }
+    
+    .carousel-item {
+        height: 50vh;
+    }
+    
+    .carousel-caption {
+        width: 90%;
+        padding: 10px;
+    }
+    
+    .row {
+        flex-direction: column;
+    }
+    
+    .col-lg-6 {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+}
+
+/* Remove shadow from all Bootstrap elements */
+.shadow-none,
+.card,
+.container,
+.row,
+.col-lg-6 {
+    box-shadow: none !important;
+}
