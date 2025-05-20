@@ -1,0 +1,172 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}Contact Us{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <!-- Contact Form Column -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow-sm" style="border-radius: 12px; border: none;">
+                <div class="card-body">
+                    <h2 class="mb-4" style="color: #b38ff9;">
+                        <i class="fas fa-envelope me-2"></i>Send Us a Message
+                    </h2>
+                    
+                    <form method="POST" action="{% url 'contact' %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Your Name</label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="subject" class="form-label">Subject</label>
+                            <select class="form-select" id="subject" name="subject">
+                                <option value="General Inquiry">General Inquiry</option>
+                                <option value="Technical Support">Technical Support</option>
+                                <option value="Feedback">Feedback</option>
+                                <option value="Partnership">Partnership</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="message" class="form-label">Message</label>
+                            <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane me-2"></i>Send Message
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Contact Info Column -->
+        <div class="col-lg-6">
+            <div class="card shadow-sm mb-4" style="border-radius: 12px; border: none;">
+                <div class="card-body">
+                    <h2 class="mb-4" style="color: #b38ff9;">
+                        <i class="fas fa-info-circle me-2"></i>Contact Information
+                    </h2>
+                    
+                    <div class="contact-info-item d-flex mb-4">
+                        <div class="icon-wrapper me-3" style="width: 50px; height: 50px; background-color: #b38ff9; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-map-marker-alt text-white"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-1">Our Location</h5>
+                            <p class="mb-0">Kampala, Uganda</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-info-item d-flex mb-4">
+                        <div class="icon-wrapper me-3" style="width: 50px; height: 50px; background-color: #b38ff9; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-envelope text-white"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-1">Email Us</h5>
+                            <p class="mb-0">quizbotappafrica@gmail.com</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-info-item d-flex mb-4">
+                        <div class="icon-wrapper me-3" style="width: 50px; height: 50px; background-color: #b38ff9; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-phone-alt text-white"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-1">Call Us</h5>
+                            <p class="mb-0">+256 786 259 893</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-info-item d-flex">
+                        <div class="icon-wrapper me-3" style="width: 50px; height: 50px; background-color: #b38ff9; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-clock text-white"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-1">Working Hours</h5>
+                            <p class="mb-0">Monday - Friday: 9:00 AM - 5:00 PM</p>
+                            <p class="mb-0">Saturday: 10:00 AM - 2:00 PM</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Map Section -->
+            <div class="card shadow-sm" style="border-radius: 12px; border: none;">
+                <div class="card-body">
+                    <h5 class="mb-3" style="color: #b38ff9;">
+                        <i class="fas fa-map-marked-alt me-2"></i>Find Us on Map
+                    </h5>
+                    <div style="height: 250px; background-color: #f8f9fa; border-radius: 8px; overflow: hidden;">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.7536223157963!2d32.58131331475387!3d0.3135999999999966!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x177dbb93c5695ab7%3A0x8e2778198b540b9d!2sKampala%2C%20Uganda!5e0!3m2!1sen!2sus!4v1623256789012!5m2!1sen!2sus" 
+                                width="100%" 
+                                height="100%" 
+                                style="border:0;" 
+                                allowfullscreen="" 
+                                loading="lazy">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Contact Page Specific Styles */
+    .contact-info-item {
+        transition: transform 0.2s ease;
+    }
+    
+    .contact-info-item:hover {
+        transform: translateX(5px);
+    }
+    
+    .icon-wrapper {
+        transition: all 0.3s ease;
+    }
+    
+    .contact-info-item:hover .icon-wrapper {
+        background-color: #9c7ae4 !important;
+        transform: scale(1.05);
+    }
+    
+    textarea.form-control {
+        min-height: 150px;
+    }
+    
+    .form-control, .form-select {
+        border-radius: 8px;
+        padding: 10px 15px;
+    }
+    
+    .form-control:focus, .form-select:focus {
+        border-color: #b38ff9;
+        box-shadow: 0 0 0 0.25rem rgba(179, 143, 249, 0.25);
+    }
+    
+    @media (max-width: 768px) {
+        .contact-info-item {
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .icon-wrapper {
+            margin-bottom: 10px;
+            margin-right: 0 !important;
+        }
+    }
+</style>
+{% endblock %}

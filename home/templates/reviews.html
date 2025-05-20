@@ -1,0 +1,76 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}Reviews{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mb-4">Leave a Review</h2>
+
+    <!-- Review submission form -->
+    <form method="POST" action="{% url 'reviews' %}">
+        {% csrf_token %}
+        <input type="hidden" name="form_type" value="review">
+        <div class="mb-3">
+            {{ review_form.content }}
+        </div>
+        <button type="submit" class="btn btn-primary">Submit Review</button>
+    </form>
+
+    <hr class="my-4">
+
+    <!-- Display all reviews with user info and replies -->
+    <h3>Reviews</h3>
+    {% for review in reviews %}
+        <div class="border p-3 mb-3 rounded" style="background-color: #f8f9fa;">
+            <div class="d-flex align-items-center mb-2">
+                <img src="https://res.cloudinary.com/dajpwmuxc/image/upload/v1747649383/1_ct8acx.webp" 
+                     alt="{{ review.user.username }}" 
+                     class="rounded-circle" 
+                     width="50" 
+                     height="50"
+                     style="object-fit: cover;">
+                <strong class="ms-3">{{ review.user.username }}</strong>
+            </div>
+            <p>{{ review.content }}</p>
+            <p class="text-muted">Posted on {{ review.created_at|date:"F j, Y, g:i a" }}</p>
+
+            <!-- Replies Section -->
+            <div class="ms-4 mt-3">
+                {% if review.replies.all %}
+                    {% for reply in review.replies.all %}
+                        <div class="border p-2 mb-2 rounded" style="background-color: white;">
+                            <div class="d-flex align-items-center mb-2">
+                                <img src="https://res.cloudinary.com/dajpwmuxc/image/upload/v1747649383/1_ct8acx.webp" 
+                                     alt="{{ reply.user.username }}" 
+                                     class="rounded-circle" 
+                                     width="40" 
+                                     height="40"
+                                     style="object-fit: cover;">
+                                <strong class="ms-3">{{ reply.user.username }}</strong>
+                            </div>
+                            <p>{{ reply.content }}</p>
+                            <p class="text-muted">Replied on {{ reply.created_at|date:"F j, Y, g:i a" }}</p>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted">No replies yet.</p>
+                {% endif %}
+
+                <!-- Reply submission form for each review -->
+                <form method="POST" action="{% url 'reviews' %}" class="mt-2">
+                    {% csrf_token %}
+                    <input type="hidden" name="form_type" value="reply">
+                    <input type="hidden" name="review_id" value="{{ review.id }}">
+                    <div class="mb-2">
+                        {{ reply_form.content }}
+                    </div>
+                    <button type="submit" class="btn btn-secondary btn-sm">Reply</button>
+                </form>
+            </div>
+        </div>
+    {% empty %}
+        <div class="alert alert-info">No reviews yet. Be the first to leave one!</div>
+    {% endfor %}
+</div>
+{% endblock %}

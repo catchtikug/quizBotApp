@@ -1,0 +1,159 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}Coming Soon{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <!-- Animated Icon -->
+            <div class="mb-4">
+                <i class="fas fa-cogs fa-5x text-purple" style="color: #b38ff9; animation: pulse 2s infinite;"></i>
+            </div>
+            
+            <!-- Heading -->
+            <h1 class="display-4 mb-3" style="color: #b38ff9;">Coming Soon!</h1>
+            
+            <!-- Subheading -->
+            <p class="lead mb-4">We're working hard to bring you an amazing multiplayer experience.</p>
+            
+            <!-- Description -->
+            <div class="card p-4 mb-4" style="background-color: #f8f9fa; border-radius: 12px;">
+                <p class="mb-0">
+                    Our multiplayer feature is currently in development. You'll soon be able to challenge your friends,
+                    compete in real-time quizzes, and climb the leaderboards together. Stay tuned for updates!
+                </p>
+            </div>
+            
+            <!-- Countdown Timer -->
+            <div class="countdown-container mb-5">
+                <div class="countdown-box">
+                    <span id="days" class="countdown-number">00</span>
+                    <span class="countdown-label">Days</span>
+                </div>
+                <div class="countdown-box">
+                    <span id="hours" class="countdown-number">00</span>
+                    <span class="countdown-label">Hours</span>
+                </div>
+                <div class="countdown-box">
+                    <span id="minutes" class="countdown-number">00</span>
+                    <span class="countdown-label">Minutes</span>
+                </div>
+                <div class="countdown-box">
+                    <span id="seconds" class="countdown-number">00</span>
+                    <span class="countdown-label">Seconds</span>
+                </div>
+            </div>
+            
+            <!-- Notification Form -->
+            <div class="card p-4" style="background-color: #f8f9fa; border-radius: 12px;">
+                <h5 class="mb-3">Notify me when it's ready</h5>
+                <form class="row g-2">
+                    <div class="col-md-8">
+                        <input type="email" class="form-control" placeholder="Enter your email">
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-primary w-100">Notify Me</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Animation for the gear icon */
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+    
+    /* Countdown timer styles */
+    .countdown-container {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+    }
+    
+    .countdown-box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: white;
+        padding: 15px 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        min-width: 80px;
+    }
+    
+    .countdown-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #b38ff9;
+    }
+    
+    .countdown-label {
+        font-size: 0.8rem;
+        color: #6c757d;
+        text-transform: uppercase;
+        margin-top: 5px;
+    }
+    
+    .text-purple {
+        color: #b38ff9;
+    }
+    
+    @media (max-width: 576px) {
+        .countdown-container {
+            flex-wrap: wrap;
+        }
+        
+        .countdown-box {
+            min-width: 70px;
+            padding: 10px 15px;
+        }
+        
+        .countdown-number {
+            font-size: 1.5rem;
+        }
+    }
+</style>
+
+<script>
+    // Set the date we're counting down to (2 months from now)
+    const countDownDate = new Date();
+    countDownDate.setMonth(countDownDate.getMonth() + 2);
+    
+    // Update the countdown every 1 second
+    const x = setInterval(function() {
+        // Get today's date and time
+        const now = new Date().getTime();
+        
+        // Find the distance between now and the countdown date
+        const distance = countDownDate - now;
+        
+        // Time calculations for days, hours, minutes and seconds
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        
+        // Display the result
+        document.getElementById("days").innerHTML = days.toString().padStart(2, '0');
+        document.getElementById("hours").innerHTML = hours.toString().padStart(2, '0');
+        document.getElementById("minutes").innerHTML = minutes.toString().padStart(2, '0');
+        document.getElementById("seconds").innerHTML = seconds.toString().padStart(2, '0');
+        
+        // If the countdown is finished, write some text
+        if (distance < 0) {
+            clearInterval(x);
+            document.getElementById("days").innerHTML = "00";
+            document.getElementById("hours").innerHTML = "00";
+            document.getElementById("minutes").innerHTML = "00";
+            document.getElementById("seconds").innerHTML = "00";
+        }
+    }, 1000);
+</script>
+{% endblock %}

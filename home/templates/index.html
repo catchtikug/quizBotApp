@@ -1,0 +1,18 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        {% for book in books %}
+            <div class="col-6 col-md-4 col-lg-3 mb-3">
+                <a href="{% url 'questions' book.id %}" class="btn btn-book w-100">
+                    {{ book.name }}
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

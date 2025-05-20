@@ -1,0 +1,388 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+body {
+    background-image: url("https://res.cloudinary.com/dajpwmuxc/image/upload/v1747486443/bible_ri34td.jpg"); /* Replace with your image path */
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+.container {
+    padding-top: 20px;
+}
+
+.question-card {
+    background-color: white;
+    max-width: 500px;
+    width: 100%;
+    border-radius: 15px;
+    color:black;
+    font-weight: bold;
+    text-align: center;
+}
+
+.question-text {
+    color: gold;
+    font-weight: bold;
+}
+
+.btn-option {
+    background-color:#b38ff9;
+    color: white;
+    font-weight: bold;
+    max-width: 300px;
+    width: 100%;
+    border-radius: 25px;
+    padding: 10px 0;
+    text-align: center;
+    margin: 5px auto;
+}
+
+.btn-option:hover {
+    background-color: #f5f5f5;
+    color: #b38ff9;
+}
+
+h2 {
+    font-weight: bold;
+    color: white;
+}
+.correct {
+    background-color: green; /* Correct answer */
+    color: white;
+}
+.incorrect {
+    background-color: red; /* Incorrect answer */
+    color: white;
+}
+
+</style>
+{% endblock %}
+
+
+{% block title %}The book of {{ book.name }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="my-4 text-center">The book of {{ book.name }}</h2>
+
+    <!-- Score and Rank Section -->
+    <div class="d-flex justify-content-between align-items-center mb-4 p-3 bg-light rounded">
+        <div>
+            <p id="score">Score: {{ score|default:0 }}</p>
+            <p id="rank">Rank: {{ rank|default:"Beginner" }}</p>
+        </div>
+    </div>
+
+    <div class="d-flex flex-column align-items-center">
+        <div class="question-card card p-4 mb-4 text-center">
+            <!-- Display Question -->
+            <p class="question-text">{{ current_question.question }}</p>
+            
+            <!-- Process and Display Verse Reference -->
+            {% if current_question.verse_reference %}
+                <a href="#" class="verse-reference text-muted" data-book-id="{{ book.id }}" 
+                   data-chapter-id="{{ chapter.id }}" data-verse="{{ verse }}" 
+                   style="pointer-events: none;">
+                    {{ current_question.verse_reference }}
+                </a>
+            {% else %}
+                <p>Reference not available</p>
+            {% endif %}
+
+            <!-- Display Fetched Verse Text Here -->
+            <div id="verseText" class="mt-3" style="display: none;">
+                <p id="verseContent"></p>
+            </div>
+
+            <!-- Display Answer Options -->
+            <div class="d-flex flex-column">
+                {% for option in current_question.options %}
+                    {% with selected_answer=selected_answers.current_question.question %}
+                    <a href="#" class="btn btn-option mb-2 
+                        {% if selected_answer %}
+                            {% if option == selected_answer and selected_answer == current_question.correct_answer %}
+                                correct
+                            {% elif option == selected_answer and selected_answer != current_question.correct_answer %}
+                                incorrect
+                            {% elif option == current_question.correct_answer %}
+                                correct
+                            {% endif %}
+                        {% endif %}" 
+                       data-question="{{ current_question.question }}" 
+                       data-correct="{{ current_question.correct_answer }}">{{ option }}</a>
+                    {% endwith %}
+                {% endfor %}
+            </div>
+
+            <!-- Circular Timer Display -->
+            <div class="question-timer my-4">
+                <div class="circle">
+                    <svg>
+                        <circle cx="50" cy="50" r="45"></circle>
+                    </svg>
+                    <div class="countdown-text" id="countdown">60</div>
+                </div>
+            </div>
+
+            <!-- Sound Effects -->
+            <audio id="correctSound" src="https://res.cloudinary.com/dajpwmuxc/video/upload/v1747698773/correct_tpqjwl.mp3" preload="auto"></audio>
+            <audio id="incorrectSound" src="https://res.cloudinary.com/dajpwmuxc/video/upload/v1747698773/incorrect_psi0g4.mp3" preload="auto"></audio>
+
+            <!-- Popup Message -->
+            <div id="popupMessage" class="popup" style="display:none;">
+                <span id="popupText"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="paymentModal" tabindex="-1" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Complete Your Payment</h5>
+            </div>
+            <div class="modal-body">
+                <p>To continue the quiz, you must complete your payment. Once done, you can access the rest of the questions.</p>
+            </div>
+            <div class="modal-footer">
+                <button id="completePaymentButton" class="btn btn-primary">Simulate Payment</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .correct {
+        background-color: rgb(197, 250, 197);
+        color: white;
+    }
+
+    .incorrect {
+        background-color: rgb(245, 138, 138);
+        color: white;
+    }
+
+    .question-timer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .circle {
+        position: relative;
+        width: 100px;
+        height: 100px;
+    }
+
+    .circle svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        transform: rotate(-90deg);
+    }
+
+    .circle svg circle {
+        width: 100%;
+        height: 100%;
+        fill: none;
+        stroke-width: 10;
+        stroke: #b38ff9;
+        stroke-dasharray: 283;
+        stroke-dashoffset: 0;
+        transition: stroke-dashoffset 1s linear;
+    }
+
+    .countdown-text {
+        font-size: 24px;
+        font-weight: bold;
+        color:#b38ff9;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        z-index: 1000;
+    }
+    
+    .modal-active {
+        overflow: hidden;
+    }
+</style>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const buttons = document.querySelectorAll('.btn-option');
+        let timeLimit = 60;
+        const countdownElement = document.getElementById("countdown");
+        const circleElement = document.querySelector('circle');
+        const FULL_DASH_ARRAY = 283;
+        let answerSelected = false;
+
+        const verseReference = document.querySelector('.verse-reference');
+        verseReference.style.pointerEvents = 'none';
+        verseReference.classList.add('text-muted');
+
+        const timerInterval = setInterval(function () {
+            timeLimit--;
+            countdownElement.innerText = timeLimit;
+            setCircleDashoffset();
+
+            if (timeLimit <= 0) {
+                clearInterval(timerInterval);
+                submitAnswer();
+            }
+        }, 1000);
+
+        function setCircleDashoffset() {
+            const offset = FULL_DASH_ARRAY - (timeLimit / 60) * FULL_DASH_ARRAY;
+            circleElement.style.strokeDashoffset = offset;
+        }
+
+        function submitAnswer(selectedAnswer = null) {
+            const questionText = buttons.length ? buttons[0].dataset.question : '';
+            selectedAnswer = selectedAnswer || null;
+
+            fetch('{% url "store_answer" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({
+                    question: questionText,
+                    answer: selectedAnswer
+                })
+            }).then(response => response.json())
+              .then(data => {
+                  if (data.modal) {
+                      showPaymentModal();
+                  } else {
+                      window.location.reload();
+                  }
+              });
+        }
+
+        function showPopup(message) {
+            const popup = document.getElementById("popupMessage");
+            const popupText = document.getElementById("popupText");
+            popupText.innerText = message;
+            popup.style.display = "block";
+            setTimeout(() => {
+                popup.style.display = "none";
+            }, 2000);
+        }
+
+        const verseTextContainer = document.getElementById('verseText');
+        const verseContent = document.getElementById('verseContent');
+
+        verseReference.addEventListener('click', function(event) {
+            event.preventDefault();
+
+            const bookId = this.dataset.bookId;
+            const chapterId = this.dataset.chapterId;
+            const verse = this.dataset.verse;
+
+            fetch('{% url "get_verse" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ book_id: bookId, chapter_id: chapterId, verse: parseInt(verse) })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    verseContent.innerText = data.verse_text;
+                    verseTextContainer.style.display = 'block';
+                } else {
+                    verseContent.innerText = 'Verse not available.';
+                    verseTextContainer.style.display = 'block';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching verse:', error);
+                verseContent.innerText = 'Error fetching verse.';
+                verseTextContainer.style.display = 'block';
+            });
+        });
+
+        buttons.forEach(button => {
+            button.addEventListener('click', function (event) {
+                event.preventDefault();
+
+                if (answerSelected) return;
+
+                answerSelected = true;
+
+                buttons.forEach(btn => {
+                    btn.disabled = true;
+                });
+
+                const questionText = this.dataset.question;
+                const correctAnswer = this.dataset.correct;
+                const selectedAnswer = this.innerText;
+
+                buttons.forEach(btn => {
+                    btn.classList.remove('correct', 'incorrect');
+                    if (btn.innerText === correctAnswer) {
+                        btn.classList.add('correct');
+                    }
+                    if (btn.innerText === selectedAnswer && selectedAnswer !== correctAnswer) {
+                        btn.classList.add('incorrect');
+                    }
+                });
+
+                if (selectedAnswer === correctAnswer) {
+                    document.getElementById('correctSound').play();
+                    showPopup("✔️ Congratulations! Correct answer!");
+                } else {
+                    document.getElementById('incorrectSound').play();
+                    showPopup("❌ Oops! That's incorrect!");
+                }
+
+                verseReference.style.pointerEvents = 'auto';
+                verseReference.classList.remove('text-muted');
+
+                setTimeout(() => {
+                    submitAnswer(selectedAnswer);
+                }, 8000);
+            });
+        });
+
+        function showPaymentModal() {
+            const modal = document.getElementById("paymentModal");
+            const body = document.body;
+
+            body.classList.add('modal-active');
+            modal.style.display = "block";
+
+            const closeModal = modal.querySelector(".close");
+            closeModal.onclick = function() {
+                modal.style.display = "none";
+                body.classList.remove('modal-active');
+            };
+        }
+    });
+</script>
+{% endblock %}
