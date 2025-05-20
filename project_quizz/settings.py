@@ -18,9 +18,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-4w!(yzyvv4c2hnl54pqwgzmy%wh@cyl2^&2cj#yysty2fhxy(t'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['quizzapp-y924.onrender.com', '127.0.0.1']
 
 
 # Application definition
@@ -78,12 +78,21 @@ WSGI_APPLICATION = 'project_quizz.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'QuizzApp',
-        'USER': 'postgres',
-        'HOST': 'localhost',
-        'PASSWORD': '#$%345T',
+        'NAME': 'quizzapp_db_4ta0',
+        'USER': 'quizzapp_db_4ta0_user',
+        'HOST': 'dpg-d0lsijidbo4c73c89m30-a.singapore-postgres.render.com',
+        'PASSWORD': 'ID9v5H19xCs4Mff8zSgB4m6yyQREk9yn',
     }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'QuizzApp',
+#         'USER': 'postgres',
+#         'HOST': 'localhost',
+#         'PASSWORD': '#$%345T',
+#     }
+# }
 
 
 # Password validation
