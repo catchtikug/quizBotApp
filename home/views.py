@@ -18,7 +18,7 @@ import json
 
 
 # Logging in the user
-def login(request):
+def login_view(request):  # Renamed function to avoid name conflict
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
@@ -27,15 +27,16 @@ def login(request):
             redirect_to = request.GET.get('next', 'home')    
             user = authenticate(request, username=useremail, password=password)
             
-            login(request, user)
+            login(request, user)  # This now correctly uses Django's login
             if 'next' in request.POST:
                 return redirect(redirect_to)
+            return redirect('home')
     else:
         next_value = request.GET.get('next', "home")
         request.session['next_value'] = next_value
         form = AuthenticationForm()
-    return render(request, 'login_new.html', {'form':form})
-    # return render(request, 'login_new.html')
+    return render(request, 'registration/login.html', {'form': form})
+
 
 
 
@@ -64,10 +65,9 @@ def signup(request):
                 user.save()
                 
                 # Log the user in
-                login(request, user)
-                
+                # login(request, user)
                 messages.success(request, 'Account created successfully!')
-                return redirect('home')  # Replace with your home page
+                return redirect('login')  # Replace with your home page
             
             except Exception as e:
                 messages.error(request, f'Registration failed: {str(e)}')
