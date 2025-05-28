@@ -71,3 +71,12 @@ class ReplyAdmin(admin.ModelAdmin):
     list_display = ('id', 'user', 'review', 'content', 'created_at', 'updated_at')
 admin.site.register(Reply, ReplyAdmin)
 
+
+# PATNERS ADMIN MODEL
+class PartnerAdmin(admin.ModelAdmin):
+    list_display = ('name', 'website', 'is_active', 'date_added')
+    list_filter = ('is_active',)
+    search_fields = ('name', 'description')
+    list_editable = ('is_active',)
+    
+admin.site.register(Partner, PartnerAdmin)

@@ -1,0 +1,272 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}Our Partners | QuizBot{% endblock %}
+
+{% block extra_css %}
+<style>
+    .partners-hero {
+        background-image: url('https://res.cloudinary.com/dajpwmuxc/image/upload/v1748400219/1x_hmcuta.jpg');
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        padding: 5rem 0 4rem;
+        color: white;
+        margin-bottom: 3rem;
+        border-radius: 0;
+        margin-top: -25px;
+    }
+    
+    .partner-card {
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        margin-bottom: 2rem;
+        height: 100%;
+    }
+    
+    .partner-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+        border-color: #d0d0d0;
+    }
+    
+    .partner-logo-container {
+        height: 150px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        /* padding: 1.5rem; */
+        background: #f9f9f9;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .partner-logo {
+        height: auto;
+        width: 100%;
+        /* filter: grayscale(20%); */
+        opacity: 0.9;
+        transition: all 0.3s ease;
+    }
+    
+    .partner-card:hover .partner-logo {
+        filter: grayscale(0%);
+        opacity: 1;
+    }
+    
+    .partner-website-btn {
+        background-color: #4a6491;
+        color: white;
+        border: none;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+    }
+    
+    .partner-website-btn:hover {
+        background-color: #3a547e;
+        color: white;
+    }
+    
+    .partner-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: rgba(0,0,0,0.7);
+        color: white;
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+    
+    .card-body {
+        /* padding: 1.5rem; */
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+    }
+    
+    .card-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        color: #333;
+    }
+    
+    .card-text {
+        color: #666;
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="partners-hero text-center">
+    <div class="container">
+        <h1 class="display-5 fw-bold mb-3">Strategic Partnerships</h1>
+        <p class="lead mb-4">Collaborating with industry leaders to deliver exceptional learning experiences</p>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="{% url 'home' %}" class="btn btn-outline-light btn-lg px-4">
+                <i class="fas fa-arrow-left me-2"></i>Return Home
+            </a>
+            {% if user.is_staff %}
+            <a href="{% url 'partners' %}" class="btn btn-light btn-lg px-4">
+                <i class="fas fa-cog me-2"></i>Manage Partners
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Partners Grid -->
+<div class="container mb-5">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        <!-- Sample Partner 1 -->
+        <div class="col">
+            <div class="card h-100 partner-card">
+                <div class="partner-logo-container">
+                    <img src="https://res.cloudinary.com/dajpwmuxc/image/upload/c_fill,w_612,h_408/v1748400421/1a_ftgrng.webp" class="partner-logo" alt="Coursera logo">
+                </div>
+                <div class="card-body mt-4">
+                    <h3 class="card-title">Coursera</h3>
+                    <p class="card-text">Collaborating to bring academic quiz content from top universities to our platform, enhancing learning outcomes for all users.</p>
+                </div>
+                <div class="card-footer bg-white border-0 pb-3 pt-0">
+                    <a href="https://www.coursera.org" target="_blank" class="btn partner-website-btn w-100">
+                        <i class="fas fa-external-link-alt me-2"></i>Visit Website
+                    </a>
+                </div>
+                <div class="partner-badge">
+                    Partner since 2021
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sample Partner 2 -->
+        <div class="col">
+            <div class="card h-100 partner-card">
+                <div class="partner-logo-container">
+                    <img src="https://res.cloudinary.com/dajpwmuxc/image/upload/c_fill,w_612,h_408/v1748400873/1bb_xtomhc.webp" class="partner-logo" alt="Duolingo logo">
+                </div>
+                <div class="card-body mt-4">
+                    <h3 class="card-title">Duolingo</h3>
+                    <p class="card-text">Integrating language learning quizzes and sharing best practices in gamified education experiences.</p>
+                </div>
+                <div class="card-footer bg-white border-0 pb-3 pt-0">
+                    <a href="https://www.duolingo.com" target="_blank" class="btn partner-website-btn w-100">
+                        <i class="fas fa-external-link-alt me-2"></i>Visit Website
+                    </a>
+                </div>
+                <div class="partner-badge">
+                    Partner since 2022
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sample Partner 3 -->
+        <div class="col">
+            <div class="card h-100 partner-card">
+                <div class="partner-logo-container">
+                    <img src="https://res.cloudinary.com/dajpwmuxc/image/upload/c_fill,w_612,h_408/v1748407043/1cd_qtdesw.jpg" class="partner-logo" alt="Khan Academy logo">
+                </div>
+                <div class="card-body mt-4">
+                    <h3 class="card-title">Khan Academy</h3>
+                    <p class="card-text">Sharing educational content and assessment methodologies to create more effective learning pathways.</p>
+                </div>
+                <div class="card-footer bg-white border-0 pb-3 pt-0">
+                    <a href="https://www.khanacademy.org" target="_blank" class="btn partner-website-btn w-100">
+                        <i class="fas fa-external-link-alt me-2"></i>Visit Website
+                    </a>
+                </div>
+                <div class="partner-badge">
+                    Partner since 2020
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sample Partner 4 -->
+        <div class="col">
+            <div class="card h-100 partner-card">
+                <div class="partner-logo-container">
+                    <img src="https://res.cloudinary.com/dajpwmuxc/image/upload/c_fill,w_612,h_408/v1748407182/1ds_wxxauf.jpg" class="partner-logo" alt="IBM logo" >
+                </div>
+                <div class="card-body mt-4">
+                    <h3 class="card-title">IBM Education</h3>
+                    <p class="card-text">Leveraging IBM's cognitive computing and AI capabilities to enhance our adaptive learning algorithms.</p>
+                </div>
+                <div class="card-footer bg-white border-0 pb-3 pt-0">
+                    <a href="https://www.ibm.com/training" target="_blank" class="btn partner-website-btn w-100">
+                        <i class="fas fa-external-link-alt me-2"></i>Visit Website
+                    </a>
+                </div>
+                <div class="partner-badge">
+                    Partner since 2023
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sample Partner 5 -->
+        <div class="col">
+            <div class="card h-100 partner-card">
+                <div class="partner-logo-container">
+                    <img src="https://res.cloudinary.com/dajpwmuxc/image/upload/c_fill,w_612,h_408/v1748407325/1djs_v3kiqs.jpg" class="partner-logo" alt="Wiley logo">
+                </div>
+                <div class="card-body mt-4">
+                    <h3 class="card-title">Wiley Education</h3>
+                    <p class="card-text">Providing access to premium textbook content and certification preparation materials through our platform.</p>
+                </div>
+                <div class="card-footer bg-white border-0 pb-3 pt-0">
+                    <a href="https://www.wiley.com" target="_blank" class="btn partner-website-btn w-100">
+                        <i class="fas fa-external-link-alt me-2"></i>Visit Website
+                    </a>
+                </div>
+                <div class="partner-badge">
+                    Partner since 2021
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sample Partner 6 -->
+        <div class="col">
+            <div class="card h-100 partner-card">
+                <div class="partner-logo-container">
+                    <img src="https://res.cloudinary.com/dajpwmuxc/image/upload/c_fill,w_612,h_408/v1748407403/hf_dnjgxw.png" class="partner-logo" alt="TED logo">
+                </div>
+                <div class="card-body mt-4">
+                    <h3 class="card-title">TED-Ed</h3>
+                    <p class="card-text">Transforming engaging TED Talks into interactive quiz content that tests comprehension and critical thinking.</p>
+                </div>
+                <div class="card-footer bg-white border-0 pb-3 pt-0">
+                    <a href="https://ed.ted.com" target="_blank" class="btn partner-website-btn w-100">
+                        <i class="fas fa-external-link-alt me-2"></i>Visit Website
+                    </a>
+                </div>
+                <div class="partner-badge">
+                    Partner since 2022
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Call to Action -->
+<section class="bg-light py-5">
+    <div class="container text-center">
+        <h2 class="mb-4">Interested in Partnership?</h2>
+        <p class="lead mb-4">We collaborate with organizations that share our commitment to innovative education and lifelong learning.</p>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="{% url 'contact' %}" class="btn btn-primary btn-lg px-4">
+                <i class="fas fa-envelope me-2"></i>Contact Our Team
+            </a>
+            <a href="#" class="btn btn-outline-secondary btn-lg px-4">
+                <i class="fas fa-file-alt me-2"></i>Partnership PDF
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

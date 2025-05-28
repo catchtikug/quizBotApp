@@ -39,7 +39,6 @@ def login_view(request):  # Renamed function to avoid name conflict
 
 
 
-
 def signup(request):
     if request.method == 'POST':
         form = UsersCreationForm(request.POST)
@@ -78,16 +77,19 @@ def signup(request):
     return render(request, 'signup.html', {'form': form})
 
 
+
 # INDEX VIEW
 def home(request):
     books = Books.objects.all()
     context = {"books": books}
     return render(request, 'index.html', context)
 
+
+
 def questions(request, id):
-    print(id)
     context = {'idd':id}
     return render(request, 'questions.html', context)
+
 
 
 # REVIEWS VIEW
@@ -95,14 +97,17 @@ def multiplayer(request):
     return render(request, 'multiplayer.html')
 
 
+
 # PROFILE VIEW
 def profile(request):
     return render(request, 'profile.html')
 
 
+
 # SETTINGS VIEW
 def settings(request):
     return render(request, 'settings.html')
+
 
 
 # CONTACT VIEW
@@ -167,6 +172,7 @@ def questions(request, book_id, question_id=None):
             'correct_answer': current_question.correct_answer,
             'options': options,
             'verse_reference': verse_reference,
+            'verse_text': current_question.verse.text,
         },
         'chapter': current_question.chapter,
         'verse': current_question.verse.verse_number,
@@ -176,6 +182,7 @@ def questions(request, book_id, question_id=None):
     }
     
     return render(request, 'questions.html', context)
+
 
 
 # RANKING VIEW
@@ -189,6 +196,7 @@ def get_rank(score):
         return "Advanced"
     else:
         return "Expert"
+
 
 
 # STORE ANSWERS VIEW
@@ -235,6 +243,7 @@ def store_answer(request):
     return JsonResponse({'success': False, 'error': 'Invalid request method'})
 
 
+
 # GET VERSE VIEW
 @csrf_exempt
 @login_required
@@ -260,21 +269,6 @@ def get_verse(request):
             return JsonResponse({'success': False, 'error': str(e)})
     
     return JsonResponse({'success': False, 'error': 'Invalid request method'})
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -317,6 +311,7 @@ def reviews_list(request):
     })
 
 
+
 @login_required
 def profile(request):
     # Sample data - replace with your actual data logic
@@ -342,6 +337,8 @@ def profile(request):
     }
     return render(request, 'profile.html', context)
 
+
+
 @login_required
 def update_profile_picture(request):
     if request.method == 'POST' and request.FILES.get('profile_picture'):
@@ -350,6 +347,8 @@ def update_profile_picture(request):
         user.save()
         messages.success(request, 'Profile picture updated successfully!')
     return redirect('profile')
+
+
 
 @login_required
 def update_profile(request):
@@ -362,6 +361,8 @@ def update_profile(request):
     else:
         form = ProfileUpdateForm(instance=request.user)
     return render(request, 'profile.html', {'form': form})
+
+
 
 @login_required
 def change_password(request):
@@ -377,3 +378,234 @@ def change_password(request):
     else:
         form = PasswordChangeForm(request.user)
     return render(request, 'profile.html', {'form': form})
+
+
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib import messages
+from .forms import UserEditForm
+from django.db.models import Count
+from .models import Users, Review, Reply
+
+
+def is_admin(user):
+    return user.is_staff or user.is_superuser
+
+
+
+@login_required
+@user_passes_test(is_admin)
+def dashboard_view(request):
+    total_users = Users.objects.count()
+    active_sessions = request.session.keys()  # This is a simple example
+    
+    context = {
+        'total_users': total_users,
+        'active_sessions': len(active_sessions),
+        'users': Users.objects.all()[:5]  # Show first 5 users
+    }
+    return render(request, 'dashboard.html', context)
+
+
+
+@login_required
+@user_passes_test(is_admin)
+def dashboard_view(request):
+    total_users = Users.objects.count()
+    active_sessions = request.session.keys()  # Simple implementation
+    
+    context = {
+        'total_users': total_users,
+        'active_sessions': len(active_sessions),
+        'users': Users.objects.all().order_by('-date_created')[:5]
+    }
+    return render(request, 'dashboard.html', context)
+
+
+
+@login_required
+@user_passes_test(is_admin)
+def user_management(request):
+    users = Users.objects.all().order_by('-date_created')
+    return render(request, 'user_management.html', {
+        'users': users,
+        'total_users': users.count()
+    })
+
+
+
+@login_required
+@user_passes_test(is_admin)
+def edit_user(request, user_id):
+    user = get_object_or_404(Users, id=user_id)
+    
+    if request.method == 'POST':
+        form = UserEditForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'User updated successfully!')
+            return redirect('user_management')
+    else:
+        form = UserEditForm(instance=user)
+    
+    return render(request, 'edit_user.html', {
+        'form': form,
+        'user': user
+    })
+
+
+
+@login_required
+@user_passes_test(is_admin)
+def update_user(request, user_id):
+    user = get_object_or_404(Users, id=user_id)
+    
+    if request.method == 'POST':
+        form = UserEditForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'User updated successfully!')
+    return redirect('user_management')
+
+
+
+@login_required
+@user_passes_test(is_admin)
+def delete_user(request, user_id):
+    user = get_object_or_404(Users, id=user_id)
+    if request.method == 'POST':
+        user.delete()
+        messages.success(request, 'User deleted successfully!')
+    return redirect('user_management')
+
+
+
+@login_required
+@user_passes_test(is_admin)
+def reports_view(request):
+    # Example reports data
+    user_signups = Users.objects.extra(
+        select={'day': 'date(date_created)'}
+    ).values('day').annotate(count=Count('id')).order_by('-day')[:7]
+    
+    review_stats = {
+        'total_reviews': Review.objects.count(),
+        'total_replies': Reply.objects.count(),
+        'recent_reviews': Review.objects.select_related('user').order_by('-created_at')[:5]
+    }
+    
+    return render(request, 'reports.html', {
+        'user_signups': user_signups,
+        'review_stats': review_stats
+    })
+
+
+
+@login_required
+@user_passes_test(is_admin)
+def settings_view(request):
+    return render(request, 'settings.html')
+
+
+
+@login_required
+@user_passes_test(is_admin)
+def active_sessions_view(request):
+    # This is a simple implementation - you might want to use django-user-sessions
+    active_users = Users.objects.filter(is_active=True).order_by('-last_login')[:20]
+    return render(request, 'active_sessions.html', {
+        'active_users': active_users,
+        'total_active': active_users.count()
+    })
+
+
+
+@login_required
+@user_passes_test(is_admin)
+def pending_reports_view(request):
+    # Example pending reports - you might want to create a Report model
+    pending_reports = [
+        {'id': 1, 'type': 'Inappropriate Content', 'reported_by': 'user1', 'date': '2023-06-15'},
+        {'id': 2, 'type': 'Spam', 'reported_by': 'user2', 'date': '2023-06-14'},
+    ]
+    return render(request, 'pending_reports.html', {
+        'pending_reports': pending_reports,
+        'total_pending': len(pending_reports)
+    })
+
+
+
+# VIEW FOR THE PARTNERS
+@login_required
+@user_passes_test(is_admin)
+def partners_view(request):
+    partners = Partner.objects.filter(is_active=True).order_by('-date_added')
+    return render(request, 'partners.html', {
+        'partners': partners,
+        'total_partners': partners.count()
+    })
+
+
+
+@login_required
+@user_passes_test(is_admin)
+def add_partner(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        website = request.POST.get('website', '')
+        description = request.POST.get('description', '')
+        logo = request.FILES.get('logo')
+        
+        Partner.objects.create(
+            name=name,
+            website=website,
+            description=description,
+            logo=logo
+        )
+        messages.success(request, 'Partner added successfully!')
+        return redirect('partners')
+    
+    return redirect('partners')
+
+
+
+@login_required
+@user_passes_test(is_admin)
+def update_partner(request, partner_id):
+    partner = get_object_or_404(Partner, id=partner_id)
+    
+    if request.method == 'POST':
+        partner.name = request.POST.get('name')
+        partner.website = request.POST.get('website', '')
+        partner.description = request.POST.get('description', '')
+        
+        if 'logo' in request.FILES:
+            partner.logo = request.FILES['logo']
+        
+        partner.save()
+        messages.success(request, 'Partner updated successfully!')
+    
+    return redirect('partners')
+
+
+
+@login_required
+@user_passes_test(is_admin)
+def delete_partner(request, partner_id):
+    partner = get_object_or_404(Partner, id=partner_id)
+    
+    if request.method == 'POST':
+        partner.delete()
+        messages.success(request, 'Partner deleted successfully!')
+    
+    return redirect('partners')
+
+
+
+def public_partners(request):
+    partners = Partner.objects.filter(is_active=True).order_by('-date_added')
+    return render(request, 'public_partners.html', {
+        'partners': partners,
+        'total_partners': partners.count()
+    })

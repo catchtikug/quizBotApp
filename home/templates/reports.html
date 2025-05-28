@@ -1,0 +1,146 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}Reports{% endblock %}
+
+{% block content %}
+<div class="container-fluid" style="margin-top: -25px;">
+    <div class="row">
+        {% include 'sidebar.html' %}
+        
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">System Reports</h1>
+                <div class="btn-toolbar mb-2 mb-md-0">
+                    <a href="{% url 'dashboard' %}" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-1"></i>Back to Dashboard
+                    </a>
+                </div>
+            </div>
+
+            <!-- Add hidden div to store chart data -->
+            <div id="chartData" 
+                 data-labels="{% for day in user_signups %}{{ day.day|date:'M d' }}{% if not forloop.last %},{% endif %}{% endfor %}"
+                 data-values="{% for day in user_signups %}{{ day.count }}{% if not forloop.last %},{% endif %}{% endfor %}"
+                 style="display: none;"></div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <i class="fas fa-chart-line me-1"></i>User Signups (Last 7 Days)
+                        </div>
+                        <div class="card-body">
+                            <canvas id="signupsChart" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <i class="fas fa-comments me-1"></i>Review Statistics
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-6 text-center">
+                                    <h4>{{ review_stats.total_reviews }}</h4>
+                                    <p class="text-muted">Total Reviews</p>
+                                </div>
+                                <div class="col-6 text-center">
+                                    <h4>{{ review_stats.total_replies }}</h4>
+                                    <p class="text-muted">Total Replies</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-history me-1"></i>Recent Reviews
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        {% for review in review_stats.recent_reviews %}
+                        <div class="list-group-item">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">{{ review.user.username }}</h6>
+                                <small>{{ review.created_at|date:"M d, Y" }}</small>
+                            </div>
+                            <p class="mb-1">{{ review.content|truncatechars:100 }}</p>
+                        </div>
+                        {% empty %}
+                        <div class="list-group-item">
+                            <p class="mb-1 text-muted">No recent reviews found</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<!-- Load Chart.js from CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Safely initialize the chart only if the element exists
+    const chartElement = document.getElementById('signupsChart');
+    if (chartElement) {
+        // Get data from hidden div attributes
+        const dataElement = document.getElementById('chartData');
+        if (!dataElement) {
+            console.error('Chart data element not found');
+            return;
+        }
+
+        // Parse the data from attributes
+        const labels = dataElement.dataset.labels.split(',');
+        const values = dataElement.dataset.values.split(',').map(Number);
+
+        // Create the chart with proper error handling
+        try {
+            const ctx = chartElement.getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'New Users',
+                        data: values,
+                        backgroundColor: '#b38ff9',
+                        borderColor: '#9c7ae4',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        } catch (error) {
+            console.error('Error initializing chart:', error);
+            chartElement.parentElement.innerHTML = 
+                '<div class="alert alert-warning">Could not load chart data</div>';
+        }
+    }
+});
+</script>
+{% endblock %}

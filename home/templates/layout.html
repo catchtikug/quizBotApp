@@ -223,7 +223,7 @@
                 <a class="nav-link mx-3" href="{% url 'home' %}" style="box-shadow: none; padding: 0;">
                     <i class="fas fa-home" style="color: white; font-size: 24px;"></i>
                 </a>
-                <a class="nav-link mx-3" href="{% url 'settings' %}" style="box-shadow: none; padding: 0;">
+                <a class="nav-link mx-3" href="{% url 'dashboard' %}" style="box-shadow: none; padding: 0;">
                     <i class="fas fa-cog" style="color: white; font-size: 24px;"></i>
                 </a>
                 <a class="nav-link mx-3" href="{% url 'profile' %}" style="box-shadow: none; padding: 0;">
@@ -294,7 +294,7 @@
         </div>
     </nav>
     
-    <div class="container mt-4">
+    <div class="container-fluid mt-4">
         {% block content %}{% endblock %}
     </div>
 
@@ -310,7 +310,9 @@
                     <h5>Quick Links</h5>
                     <ul class="list-unstyled">
                         <li><a href="{% url 'home' %}" class="text-white">Home</a></li>
-                        <li><a href="{% url  'profile' %}" class="text-white">Profile</a></li>
+                        <li><a href="{% url 'profile' %}" class="text-white">Profile</a></li>
+                        <li><a href="{% url 'public_partners' %}" class="text-white">Partners</a></li>
+                        <li><a href="{% url 'dashboard' %}" class="text-white">Dashboard</a></li>
                         <li><a href="{% url 'contact' %}" class="text-white">Contact</a></li>
                         <li><a href="{% url 'settings' %}" class="text-white">Settings</a></li>
                     </ul>
@@ -318,7 +320,7 @@
                 <div class="col-md-4">
                     <h5>Contact Us</h5>
                     <p>Email: quizbotappafrica@gmail.com</p>
-                    <p>Phone: +256786259893</p>
+                    <p>Phone: +256755035830</p>
                     <p>Address: Kampala, Uganda</p>
                 </div>
             </div>

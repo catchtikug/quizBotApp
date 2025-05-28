@@ -27,6 +27,8 @@ class Command(BaseCommand):
                 if not chapter_num or not verse_num:
                     continue
 
+                print(f"Question {question_text} -- {chapter_num} Has been saved")
+                
                 chapter, _ = Chapters.objects.get_or_create(book=book, chapter_number=chapter_num)
 
                 verse, _ = Verses.objects.get_or_create(

@@ -25,7 +25,7 @@ body {
 }
 
 .question-text {
-    color: gold;
+    color: black;
     font-weight: bold;
 }
 
@@ -57,6 +57,22 @@ h2 {
 .incorrect {
     background-color: red; /* Incorrect answer */
     color: white;
+}
+.verse-section {
+    margin: 15px 0;
+}
+
+.verse-reference {
+    color: #6c757d;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.verse-text {
+    font-style: italic;
+    color: #495057;
+    border-left: 3px solid #b38ff9;
+    padding-left: 10px;
 }
 
 </style>
@@ -98,6 +114,18 @@ h2 {
                 <p id="verseContent"></p>
             </div>
 
+            <!-- With this new version: -->
+            <!-- Verse Reference and Text Display -->
+            <!-- <div class="verse-section mt-3 mb-3">
+                {% if current_question.verse_reference %}
+                    <div class="verse-text bg-light py-0 rounded">
+                        <p>{{ current_question.verse_text }}</p>
+                    </div>
+                {% else %}
+                    <p class="text-muted">Reference not available</p>
+                {% endif %}
+            </div> -->
+
             <!-- Display Answer Options -->
             <div class="d-flex flex-column">
                 {% for option in current_question.options %}
@@ -124,11 +152,11 @@ h2 {
                     <svg>
                         <circle cx="50" cy="50" r="45"></circle>
                     </svg>
-                    <div class="countdown-text" id="countdown">60</div>
+                    <div class="countdown-text" id="countdown">30</div>
                 </div>
             </div>
 
-            <!-- Sound Effects -->
+            <!-- Sound Effects with volume control -->
             <audio id="correctSound" src="https://res.cloudinary.com/dajpwmuxc/video/upload/v1747698773/correct_tpqjwl.mp3" preload="auto"></audio>
             <audio id="incorrectSound" src="https://res.cloudinary.com/dajpwmuxc/video/upload/v1747698773/incorrect_psi0g4.mp3" preload="auto"></audio>
 
@@ -232,11 +260,15 @@ h2 {
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const buttons = document.querySelectorAll('.btn-option');
-        let timeLimit = 60;
+        let timeLimit = 30;
         const countdownElement = document.getElementById("countdown");
         const circleElement = document.querySelector('circle');
         const FULL_DASH_ARRAY = 283;
         let answerSelected = false;
+
+        // Set default volume for audio elements (30% volume)
+        document.getElementById('correctSound').volume = 0.3;
+        document.getElementById('incorrectSound').volume = 0.3;
 
         const verseReference = document.querySelector('.verse-reference');
         verseReference.style.pointerEvents = 'none';
@@ -254,7 +286,7 @@ h2 {
         }, 1000);
 
         function setCircleDashoffset() {
-            const offset = FULL_DASH_ARRAY - (timeLimit / 60) * FULL_DASH_ARRAY;
+            const offset = FULL_DASH_ARRAY - (timeLimit / 30) * FULL_DASH_ARRAY;
             circleElement.style.strokeDashoffset = offset;
         }
 
@@ -354,10 +386,14 @@ h2 {
                 });
 
                 if (selectedAnswer === correctAnswer) {
-                    document.getElementById('correctSound').play();
+                    const correctSound = document.getElementById('correctSound');
+                    correctSound.currentTime = 0; // Reset audio to start
+                    correctSound.play();
                     showPopup("✔️ Congratulations! Correct answer!");
                 } else {
-                    document.getElementById('incorrectSound').play();
+                    const incorrectSound = document.getElementById('incorrectSound');
+                    incorrectSound.currentTime = 0; // Reset audio to start
+                    incorrectSound.play();
                     showPopup("❌ Oops! That's incorrect!");
                 }
 
