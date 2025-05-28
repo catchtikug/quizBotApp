@@ -44,8 +44,8 @@ def extract_mc_questions(pdf_file):
 # pdf_file = "28_Hosea_MCQuestions.pdf"
 # output_csv = "hosea_questions.csv"
 
-pdf_file = "04_NumbersMCQuestions.pdf"
-output_csv = "numbers_questions.csv"
+pdf_file = "05_Acts_MC_Questions.pdf"
+output_csv = "acts_questions.csv"
 
 print(f"📄 Reading: {pdf_file}")
 data = extract_mc_questions(pdf_file)
