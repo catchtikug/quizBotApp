@@ -15,6 +15,15 @@ from django.http import JsonResponse
 import random
 from django.views.decorators.csrf import csrf_exempt
 import json
+from django.core.management.base import BaseCommand
+from home.management.commands.db_import import Command
+
+
+
+def import_into_db():
+    Command(BaseCommand)
+    import_value = 125
+    return import_value
 
 
 # Logging in the user
@@ -94,6 +103,8 @@ def questions(request, id):
 
 # REVIEWS VIEW
 def multiplayer(request):
+    values = import_into_db()
+    print(values)
     return render(request, 'multiplayer.html')
 
 
