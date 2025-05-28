@@ -18,9 +18,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-4w!(yzyvv4c2hnl54pqwgzmy%wh@cyl2^&2cj#yysty2fhxy(t'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['quizzapp-y924.onrender.com', '127.0.0.1']
+ALLOWED_HOSTS = ['quizbotapp.onrender.com', 'quizbotbible.com', 'www.quizbotbible.com', '127.0.0.1']
 
 
 # Application definition
