@@ -41,9 +41,8 @@ def extract_mc_questions(pdf_file):
     return questions
 
 # ===== Run the script directly =====
-
-pdf_file = "12_2Kings_MCQuestions.pdf"
-output_csv = "kings_two_questions.csv"
+pdf_file = "15_Ezra_MCQuestions.pdf"
+output_csv = "ezra_questions.csv"
 
 print(f"📄 Reading: {pdf_file}")
 data = extract_mc_questions(pdf_file)

@@ -4,13 +4,13 @@ from django.core.management.base import BaseCommand
 from home.models import Categories, Books, Chapters, Verses, Questions, QuestionOptions
 
 class Command(BaseCommand):
-    help = 'Import questions for the book Kings II from CSV'
+    help = 'Import questions for the book Ezra from CSV'
 
     def handle(self, *args, **kwargs):
-        csv_file_path = 'kings_two_questions.csv'
+        csv_file_path = 'ezra_questions.csv'
 
         category, _ = Categories.objects.get_or_create(name="Old Testament")
-        book, _ = Books.objects.get_or_create(name="Kings II", category=category)
+        book, _ = Books.objects.get_or_create(name="Ezra", category=category)
 
         def extract_chapter_verse(text):
             match = re.search(r'\(1 Kgs\s+(\d+):(\d+)\)', text)
@@ -58,4 +58,4 @@ class Command(BaseCommand):
                 for text in options.values():
                     QuestionOptions.objects.create(question=question, option=text)
 
-        self.stdout.write(self.style.SUCCESS("✅ Kings II questions imported successfully."))
+        self.stdout.write(self.style.SUCCESS("✅ Ezra questions imported successfully."))
