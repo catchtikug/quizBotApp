@@ -4,16 +4,16 @@ from django.core.management.base import BaseCommand
 from home.models import Categories, Books, Chapters, Verses, Questions, QuestionOptions
 
 class Command(BaseCommand):
-    help = 'Import questions for the book Job from CSV'
+    help = 'Import questions for the book Proverbs from CSV'
 
     def handle(self, *args, **kwargs):
-        csv_file_path = 'job_questions.csv'
+        csv_file_path = 'proverbs_questions.csv'
 
         category, _ = Categories.objects.get_or_create(name="Old Testament")
-        book, _ = Books.objects.get_or_create(name="Job", category=category)
+        book, _ = Books.objects.get_or_create(name="Proverbs", category=category)
 
         def extract_chapter_verse(text):
-            match = re.search(r'\(Job\s+(\d+):(\d+)\)', text)
+            match = re.search(r'\(Prov\s+(\d+):(\d+)\)', text)
             if match:
                 return int(match.group(1)), int(match.group(2))
             return None, None
@@ -58,4 +58,4 @@ class Command(BaseCommand):
                 for text in options.values():
                     QuestionOptions.objects.create(question=question, option=text)
 
-        self.stdout.write(self.style.SUCCESS("✅ Job questions imported successfully."))
+        self.stdout.write(self.style.SUCCESS("✅ Proverbs questions imported successfully."))
